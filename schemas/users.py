@@ -2,7 +2,6 @@ from pydantic import BaseModel
 
 
 class User(BaseModel):
-    id: int
     e_mail: str
     name: str
     surname: str
@@ -11,3 +10,8 @@ class User(BaseModel):
 
 class UserEmail(BaseModel):
     e_mail: str
+
+
+class UserValidate(BaseModel):
+    e_mail: str
+    hash_password: str
