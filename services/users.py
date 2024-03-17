@@ -1,7 +1,5 @@
-from typing import List
-
 from repositories.users import UserRepository
-from schemas.users import User, UserValidate
+from schemas.users import User, UserValidate, UserUpdate
 
 
 class UserService:
@@ -17,3 +15,9 @@ class UserService:
 
     def validate_email(self, e_mail: str) -> bool:
         return self.repository.validate_email(e_mail)
+
+    def delete_user(self, e_mail: str):
+        self.repository.delete_user(e_mail)
+
+    def update_user(self, user: UserUpdate):
+        self.repository.update_user(user)

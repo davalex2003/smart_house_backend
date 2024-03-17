@@ -15,3 +15,9 @@ class UserEmail(BaseModel):
 class UserValidate(BaseModel):
     e_mail: str
     hash_password: str
+
+
+class UserUpdate(BaseModel):
+    e_mail: str
+    name: str
+    surname: str
