@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from starlette.responses import JSONResponse
 
-from depends import get_room_service, get_user_service
-from schemas.rooms import Room, RoomDTO
+from depends import get_room_service
+from schemas.rooms import Room, RoomDTO, RoomID, RoomItem
 from services.rooms import RoomService
 from schemas.users import UserValidate
 
@@ -20,3 +20,17 @@ async def create(room: Room, room_service: RoomService = Depends(get_room_servic
 @router.get("/get_rooms")
 async def get_rooms(user: UserValidate, room_service: RoomService = Depends(get_room_service)):
     return room_service.get_rooms(user)
+
+
+@router.delete("/delete")
+async def delete(room: RoomID, room_service: RoomService = Depends(get_room_service)):
+    room_service.delete_room(room)
+    return JSONResponse(status_code=200, content={"message": "Deleted"})
+
+
+@router.put("/update")
+async def update(room: RoomItem, room_service: RoomService = Depends(get_room_service)):
+    if room_service.update_room(room):
+        return JSONResponse(status_code=200, content={"message": "Updated"})
+    else:
+        return JSONResponse(status_code=404, content={"message": "No room with that id"})

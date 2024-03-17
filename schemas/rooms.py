@@ -15,3 +15,7 @@ class RoomDTO(BaseModel):
 class RoomItem(BaseModel):
     id: int
     name: str
+
+
+class RoomID(BaseModel):
+    id: int

@@ -1,7 +1,7 @@
 from typing import List
 
 from repositories.rooms import RoomRepository
-from schemas.rooms import RoomDTO, Room, RoomItem
+from schemas.rooms import RoomDTO, Room, RoomItem, RoomID
 from schemas.users import UserValidate
 
 
@@ -25,4 +25,20 @@ class RoomService:
         if user_id is None:
             return []
         user_id = user_id[0]
-        return self.repository.get_user_rooms(user_id)
+        data = self.repository.get_user_rooms(user_id)
+        for i in range(len(data)):
+            data[i] = {
+                "id": data[i][0],
+                "name": data[i][1]
+            }
+        return data
+
+    def delete_room(self, room: RoomID):
+        self.repository.delete_room(room.id)
+
+    def update_room(self, room: RoomItem) -> bool:
+        room_id = self.repository.get_room_id(room.id)
+        if room_id is None:
+            return False
+        self.repository.update_room(room)
+        return True
