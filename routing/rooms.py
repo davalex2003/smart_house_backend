@@ -35,3 +35,8 @@ async def update(room: RoomItem, room_service: RoomService = Depends(get_room_se
         return JSONResponse(status_code=200, content={"message": "Updated"})
     else:
         return JSONResponse(status_code=404, content={"message": "No room with that id"})
+
+
+@router.get("/get_devices")
+async def get_devices(room: RoomID, room_service: RoomService = Depends(get_room_service)):
+    return room_service.get_room_devices(room.id)

@@ -1,9 +1,11 @@
 import psycopg2
 import json
 import logging
+from typing import List
 
 from schemas.rooms import RoomDTO, RoomItem
 from schemas.users import UserValidate
+from schemas.devices import DeviceItem
 
 
 class RoomRepository:
@@ -77,3 +79,11 @@ class RoomRepository:
             last_id = cursor.fetchone()
         conn.close()
         return last_id[0]
+
+    def get_room_devices(self, room_id: int) -> List[DeviceItem]:
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute('SELECT * FROM "device" WHERE room_id = %s', (room_id,))
+            data = cursor.fetchall()
+        conn.close()
+        return data

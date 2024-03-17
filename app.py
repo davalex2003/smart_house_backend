@@ -3,11 +3,13 @@ from starlette.responses import JSONResponse
 
 from routing.users import router as users_router
 from routing.rooms import router as rooms_router
+from routing.devices import router as devices_router
 
 app = FastAPI()
 
 app.include_router(users_router)
 app.include_router(rooms_router)
+app.include_router(devices_router)
 
 
 @app.get("/ping")

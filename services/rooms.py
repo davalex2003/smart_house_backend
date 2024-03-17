@@ -43,3 +43,18 @@ class RoomService:
             return False
         self.repository.update_room(room)
         return True
+
+    def get_room_devices(self, room_id: int):
+        data = self.repository.get_room_devices(room_id)
+        for i in range(len(data)):
+            data[i] = {
+                "device_id": data[i][0],
+                "name": data[i][3],
+                "type": data[i][4],
+                "state": data[i][5],
+                "time": data[i][7],
+                "alarm_time": data[i][8],
+                "alarm_lamp": data[i][9]
+            }
+        return data
+
