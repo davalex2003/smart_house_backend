@@ -10,15 +10,16 @@ class RoomService:
     def __init__(self, repository: RoomRepository):
         self.repository = repository
 
-    def create_room(self, room: Room) -> bool:
+    def create_room(self, room: Room) -> tuple[bool, int]:
         user = UserValidate(e_mail=room.e_mail, hash_password=room.hash_password)
         user_id = self.repository.get_user_id(user)
         if user_id is None:
-            return False
+            return False, 0
         user_id = user_id[0]
         room_dto = RoomDTO(name=room.name, user_id=user_id)
         self.repository.create_room(room_dto)
-        return True
+        room_id = self.repository.get_last_id()
+        return True, room_id
 
     def get_rooms(self, user: UserValidate) -> List[RoomItem]:
         user_id = self.repository.get_user_id(user)

@@ -11,8 +11,9 @@ router = APIRouter(prefix="/rooms", tags=["rooms"])
 
 @router.post("/create")
 async def create(room: Room, room_service: RoomService = Depends(get_room_service)):
-    if room_service.create_room(room):
-        return JSONResponse(status_code=201, content={"message": "Created"})
+    result = room_service.create_room(room)
+    if result[0]:
+        return JSONResponse(status_code=201, content={"message": "Created", "id": result[1]})
     else:
         return JSONResponse(status_code=401, content={"message": "Unauthorized"})
 

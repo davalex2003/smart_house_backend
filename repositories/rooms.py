@@ -69,3 +69,11 @@ class RoomRepository:
             room_id = cursor.fetchone()
         conn.close()
         return room_id
+
+    def get_last_id(self):
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute('SELECT id FROM "room" ORDER BY id DESC LIMIT 1')
+            last_id = cursor.fetchone()
+        conn.close()
+        return last_id[0]
