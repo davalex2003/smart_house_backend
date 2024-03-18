@@ -39,7 +39,6 @@ class UserRepository:
             data = cursor.fetchall()
         conn.close()
         if len(data) == 1:
-
             return True
         else:
             return False
@@ -69,3 +68,12 @@ class UserRepository:
                            (user.name, user.surname, user.e_mail))
         conn.commit()
         conn.close()
+
+    def get_user_name_and_surname(self, user: UserValidate):
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute('SELECT name, surname FROM "user" WHERE e_mail = %s AND hash_password = %s',
+                           (user.e_mail, user.hash_password))
+            data = cursor.fetchone()
+        conn.close()
+        return data

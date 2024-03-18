@@ -47,3 +47,12 @@ async def delete(user: UserEmail, user_service: UserService = Depends(get_user_s
 async def update(user: UserUpdate, user_service: UserService = Depends(get_user_service)):
     user_service.update_user(user)
     return JSONResponse(status_code=200, content={"message": "Updated"})
+
+
+@router.get("/user_info")
+async def user_info(user: UserValidate, user_service: UserService = Depends(get_user_service)):
+    data = user_service.get_user(user)
+    if data == {}:
+        return JSONResponse(status_code=404, content={"message": "Not found"})
+    else:
+        return JSONResponse(status_code=200, content=data)

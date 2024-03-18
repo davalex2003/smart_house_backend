@@ -18,3 +18,18 @@ class DeviceItem(BaseModel):
     time: Optional[str]
     alarm_time: Optional[str]
     alarm_lamp: bool
+
+
+class DeviceDelete(BaseModel):
+    e_mail: str
+    hash_password: str
+    device_id: int
+
+
+class DeviceUpdate(BaseModel):
+    e_mail: str
+    hash_password: str
+    id: int
+    room_id: int
+    name: str
+    type: str

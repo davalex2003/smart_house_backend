@@ -21,3 +21,13 @@ class UserService:
 
     def update_user(self, user: UserUpdate):
         self.repository.update_user(user)
+
+    def get_user(self, user: UserValidate):
+        data = self.repository.get_user_name_and_surname(user)
+        if data is None:
+            return {}
+        else:
+            return {
+                "name": data[0],
+                "surname": data[1]
+            }

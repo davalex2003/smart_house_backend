@@ -3,7 +3,7 @@ import json
 import logging
 from typing import List
 
-from schemas.devices import DeviceCreate, DeviceItem
+from schemas.devices import DeviceCreate, DeviceItem, DeviceUpdate
 from schemas.users import UserValidate
 
 
@@ -49,3 +49,28 @@ class DeviceRepository:
             last_id = cursor.fetchone()
         conn.close()
         return last_id[0]
+
+    def get_user_devices(self, user_id: int):
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute(
+                'SELECT id, room_id, name, type, state, time, alarm_time, alarm_lamp FROM "device" WHERE user_id = %s',
+                (user_id,))
+            data = cursor.fetchall()
+        conn.close()
+        return data
+
+    def delete_device(self, device_id: int):
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute('DELETE FROM "device" WHERE id = %s', (device_id,))
+        conn.commit()
+        conn.close()
+
+    def update_device(self, device: DeviceUpdate):
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute('UPDATE "device" SET room_id = %s, name = %s, type = %s WHERE id = %s',
+                           (device.room_id, device.name, device.type, device.id))
+        conn.commit()
+        conn.close()
