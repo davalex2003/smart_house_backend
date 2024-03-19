@@ -1,5 +1,5 @@
 from repositories.devices import DeviceRepository
-from schemas.devices import DeviceCreate, DeviceDelete, DeviceUpdate
+from schemas.devices import DeviceCreate, DeviceDelete, DeviceUpdate, Led, ClockLamp, ClockTime, Alarm
 from schemas.users import UserValidate
 
 
@@ -50,3 +50,43 @@ class DeviceService:
             return False
         self.repository.update_device(device)
         return True
+
+    def manage_led(self, led: Led):
+        ip = self.repository.get_ip(led.id)
+        if ip is None:
+            return False, "Not found device"
+        # post to ip
+        # if response != 200
+        # return False, "Failed send data to device"
+        self.repository.manage_led(led)
+        return True, "OK"
+
+    def manage_clock_lamp(self, lamp: ClockLamp):
+        ip = self.repository.get_ip(lamp.id)
+        if ip is None:
+            return False, "Not found device"
+        # post to ip
+        # if response != 200
+        # return False, "Failed send data to device"
+        self.repository.manage_clock_lamp(lamp.id, lamp.state)
+        return True, "OK"
+
+    def manage_clock_time(self, alarm: ClockTime):
+        ip = self.repository.get_ip(alarm.id)
+        if ip is None:
+            return False, "Not found device"
+        # post to ip
+        # if response != 200
+        # return False, "Failed send data to device"
+        self.repository.manage_clock_time(alarm.id, alarm.time)
+        return True, "OK"
+
+    def manage_alarm(self, alarm: Alarm):
+        ip = self.repository.get_ip(alarm.id)
+        if ip is None:
+            return False, "Not found device"
+        # post to ip
+        # if response != 200
+        # return False, "Failed send data to device"
+        self.repository.manage_alarm(alarm.id, alarm.state, alarm.time)
+        return True, "OK"

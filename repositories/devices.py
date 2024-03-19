@@ -3,7 +3,7 @@ import json
 import logging
 from typing import List
 
-from schemas.devices import DeviceCreate, DeviceItem, DeviceUpdate
+from schemas.devices import DeviceCreate, DeviceItem, DeviceUpdate, Led
 from schemas.users import UserValidate
 
 
@@ -72,5 +72,41 @@ class DeviceRepository:
         with conn.cursor() as cursor:
             cursor.execute('UPDATE "device" SET room_id = %s, name = %s, type = %s WHERE id = %s',
                            (device.room_id, device.name, device.type, device.id))
+        conn.commit()
+        conn.close()
+
+    def get_ip(self, device_id: int):
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute('SELECT ip FROM "device" WHERE id = %s', (device_id,))
+            ip = cursor.fetchone()
+        conn.close()
+        return ip
+
+    def manage_led(self, led: Led):
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute('UPDATE "device" SET state = %s WHERE id = %s', (led.state, led.id))
+        conn.commit()
+        conn.close()
+
+    def manage_clock_lamp(self, device_id: int, state: bool):
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute('UPDATE "device" SET alarm_lamp = %s WHERE id = %s', (state, device_id))
+        conn.commit()
+        conn.close()
+
+    def manage_clock_time(self, device_id: int, time: str):
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute('UPDATE "device" SET time = %s WHERE id = %s', (time, device_id))
+        conn.commit()
+        conn.close()
+
+    def manage_alarm(self, device_id: int, state: bool, time: str):
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute('UPDATE "device" SET state = %s, alarm_time = %s WHERE id = %s', (state, time, device_id))
         conn.commit()
         conn.close()

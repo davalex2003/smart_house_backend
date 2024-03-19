@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from starlette.responses import JSONResponse
 
 from depends import get_device_service
-from schemas.devices import DeviceCreate, DeviceUpdate
+from schemas.devices import DeviceCreate, DeviceUpdate, Led, ClockLamp, ClockTime, Alarm
 from services.devices import DeviceService, DeviceDelete
 from schemas.users import UserValidate
 
@@ -41,3 +41,39 @@ async def update(device: DeviceUpdate, device_service: DeviceService = Depends(g
         return JSONResponse(status_code=200, content={"message": "Updated"})
     else:
         return JSONResponse(status_code=404, content={"message": "Not found user"})
+
+
+@router.put("/manage_led")
+async def manage_led(device: Led, device_service: DeviceService = Depends(get_device_service)):
+    data = device_service.manage_led(device)
+    if data[0]:
+        return JSONResponse(status_code=200, content={"message": data[1]})
+    else:
+        return JSONResponse(status_code=404, content={"message": data[1]})
+
+
+@router.put("/manage_clock_lamp")
+async def manage_clock_lamp(device: ClockLamp, device_service: DeviceService = Depends(get_device_service)):
+    data = device_service.manage_clock_lamp(device)
+    if data[0]:
+        return JSONResponse(status_code=200, content={"message": data[1]})
+    else:
+        return JSONResponse(status_code=404, content={"message": data[1]})
+
+
+@router.put("/manage_clock_time")
+async def manage_clock_time(device: ClockTime, device_service: DeviceService = Depends(get_device_service)):
+    data = device_service.manage_clock_time(device)
+    if data[0]:
+        return JSONResponse(status_code=200, content={"message": data[1]})
+    else:
+        return JSONResponse(status_code=404, content={"message": data[1]})
+
+
+@router.put("/manage_alarm")
+async def manage_alarm(device: Alarm, device_service: DeviceService = Depends(get_device_service)):
+    data = device_service.manage_alarm(device)
+    if data[0]:
+        return JSONResponse(status_code=200, content={"message": data[1]})
+    else:
+        return JSONResponse(status_code=404, content={"message": data[1]})

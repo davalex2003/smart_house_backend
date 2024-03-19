@@ -33,3 +33,25 @@ class DeviceUpdate(BaseModel):
     room_id: int
     name: str
     type: str
+
+
+class Led(BaseModel):
+    id: int
+    color: str
+    state: bool
+
+
+class ClockLamp(BaseModel):
+    id: int
+    state: bool
+
+
+class ClockTime(BaseModel):
+    id: int
+    time: str
+
+
+class Alarm(BaseModel):
+    id: int
+    state: bool
+    time: str
