@@ -3,8 +3,6 @@ from typing import Optional
 
 
 class DeviceCreate(BaseModel):
-    e_mail: str
-    hash_password: str
     room_id: int
     name: str
     type: str
@@ -20,15 +18,7 @@ class DeviceItem(BaseModel):
     alarm_lamp: bool
 
 
-class DeviceDelete(BaseModel):
-    e_mail: str
-    hash_password: str
-    device_id: int
-
-
 class DeviceUpdate(BaseModel):
-    e_mail: str
-    hash_password: str
     id: int
     room_id: int
     name: str
