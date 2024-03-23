@@ -40,11 +40,11 @@ class RoomService:
             }
         return data
 
-    def delete_room(self, room: RoomID, token: str):
+    def delete_room(self, room_id: int, token: str):
         data = decode_data(token)
         if 'e_mail' not in data or 'hash_password' not in data:
             return False
-        self.repository.delete_room(room.id)
+        self.repository.delete_room(room_id)
         return True
 
     def update_room(self, room: RoomItem, token: str) -> bool:

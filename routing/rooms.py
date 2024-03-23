@@ -29,11 +29,11 @@ async def get_rooms(request: Request, room_service: RoomService = Depends(get_ro
 
 
 @router.delete("/delete")
-async def delete(request: Request, room: RoomID, room_service: RoomService = Depends(get_room_service)):
+async def delete(request: Request, room_id: int, room_service: RoomService = Depends(get_room_service)):
     token = request.headers.get('Authorization', None)
     if token is None:
         return JSONResponse(status_code=401, content={"message": "Not found token"})
-    if room_service.delete_room(room, token):
+    if room_service.delete_room(room_id, token):
         return JSONResponse(status_code=200, content={"message": "Deleted"})
     else:
         return JSONResponse(status_code=404, content={"message": "Not found"})
@@ -51,7 +51,7 @@ async def update(request: Request, room: RoomItem, room_service: RoomService = D
 
 
 @router.get("/get_devices")
-async def get_devices(room_id: str, request: Request, room_service: RoomService = Depends(get_room_service)):
+async def get_devices(room_id: int, request: Request, room_service: RoomService = Depends(get_room_service)):
     token = request.headers.get('Authorization', None)
     if token is None:
         return JSONResponse(status_code=401, content={"message": "Not found token"})
