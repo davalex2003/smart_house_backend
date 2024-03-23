@@ -10,7 +10,8 @@ class UserRepository:
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                             filename='database.log')
 
-    def connect(self):
+    @staticmethod
+    def connect():
         with open('config.json', 'r') as f:
             config = json.load(f)
             database_params = config['database']

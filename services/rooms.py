@@ -1,9 +1,8 @@
 from typing import List
 
 from repositories.rooms import RoomRepository
-from schemas.rooms import RoomDTO, Room, RoomItem, RoomID
-from schemas.users import UserValidate
-from utils.jwt_worker import encode_data, decode_data
+from schemas.rooms import RoomDTO, Room, RoomItem
+from utils.jwt_worker import decode_data
 
 
 class RoomService:

@@ -1,9 +1,8 @@
 import psycopg2
 import json
 import logging
-from typing import List
 
-from schemas.devices import DeviceCreate, DeviceItem, DeviceUpdate, Led
+from schemas.devices import DeviceCreate, DeviceUpdate, Led
 from schemas.users import UserValidate
 
 
@@ -12,7 +11,8 @@ class DeviceRepository:
         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                             filename='database.log')
 
-    def connect(self):
+    @staticmethod
+    def connect():
         with open('config.json', 'r') as f:
             config = json.load(f)
             database_params = config['database']
