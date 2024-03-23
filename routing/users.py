@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from starlette.responses import JSONResponse
 
 from depends import get_user_service
@@ -25,33 +25,46 @@ async def validate_email(user: UserEmail, user_service: UserService = Depends(ge
 
 @router.post("/register")
 async def register(user: User, user_service: UserService = Depends(get_user_service)):
-    user_service.create_user(user)
-    return JSONResponse(status_code=201, content={"message": "Created"})
+    return JSONResponse(status_code=201, content={"token": user_service.create_user(user)})
 
 
 @router.post("/authorize")
 async def authorize(user: UserValidate, user_service: UserService = Depends(get_user_service)):
-    if user_service.validate_user(user):
-        return JSONResponse(status_code=200, content={"message": "Authorized"})
+    token = user_service.validate_user(user)
+    if token != '':
+        return JSONResponse(status_code=200, content={"token": token})
     else:
         return JSONResponse(status_code=401, content={"message": "Not Authorized"})
 
 
 @router.delete("/delete")
-async def delete(user: UserEmail, user_service: UserService = Depends(get_user_service)):
-    user_service.delete_user(user.e_mail)
-    return JSONResponse(status_code=200, content={"message": "Deleted"})
+async def delete(request: Request, user_service: UserService = Depends(get_user_service)):
+    token = request.headers.get('Authorization', None)
+    if token is None:
+        return JSONResponse(status_code=401, content={"message": "Not found token"})
+    if user_service.delete_user(token):
+        return JSONResponse(status_code=200, content={"message": "Deleted"})
+    else:
+        return JSONResponse(status_code=401, content={"message": "Wrong token"})
 
 
 @router.put("/update")
-async def update(user: UserUpdate, user_service: UserService = Depends(get_user_service)):
-    user_service.update_user(user)
-    return JSONResponse(status_code=200, content={"message": "Updated"})
+async def update(request: Request, user: UserUpdate, user_service: UserService = Depends(get_user_service)):
+    token = request.headers.get('Authorization', None)
+    if token is None:
+        return JSONResponse(status_code=401, content={"message": "Not found token"})
+    if user_service.update_user(user, token):
+        return JSONResponse(status_code=200, content={"message": "Updated"})
+    else:
+        return JSONResponse(status_code=401, content={"message": "Wrong token"})
 
 
 @router.get("/user_info")
-async def user_info(user: UserValidate, user_service: UserService = Depends(get_user_service)):
-    data = user_service.get_user(user)
+async def user_info(request: Request, user_service: UserService = Depends(get_user_service)):
+    token = request.headers.get('Authorization', None)
+    if token is None:
+        return JSONResponse(status_code=401, content={"message": "Not found token"})
+    data = user_service.get_user(token)
     if data == {}:
         return JSONResponse(status_code=404, content={"message": "Not found"})
     else:

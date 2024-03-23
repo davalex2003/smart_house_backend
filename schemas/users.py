@@ -18,6 +18,5 @@ class UserValidate(BaseModel):
 
 
 class UserUpdate(BaseModel):
-    e_mail: str
     name: str
     surname: str

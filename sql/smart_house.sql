@@ -25,8 +25,8 @@ CREATE TABLE "device" (
   "alarm_lamp" bool NOT NULL DEFAULT false
 );
 
-ALTER TABLE "room" ADD FOREIGN KEY ("user_id") REFERENCES "user" ("id");
+ALTER TABLE "room" ADD FOREIGN KEY ("user_id") REFERENCES "user" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "device" ADD FOREIGN KEY ("user_id") REFERENCES "user" ("id");
+ALTER TABLE "device" ADD FOREIGN KEY ("user_id") REFERENCES "user" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "device" ADD FOREIGN KEY ("room_id") REFERENCES "room" ("id");
+ALTER TABLE "device" ADD FOREIGN KEY ("room_id") REFERENCES "room" ("id") ON DELETE CASCADE;

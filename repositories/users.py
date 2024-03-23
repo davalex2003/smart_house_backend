@@ -61,19 +61,19 @@ class UserRepository:
         conn.commit()
         conn.close()
 
-    def update_user(self, user: UserUpdate):
+    def update_user(self, user: UserUpdate, e_mail: str):
         conn = self.connect()
         with conn.cursor() as cursor:
             cursor.execute('UPDATE "user" SET name = %s, surname = %s WHERE e_mail = %s',
-                           (user.name, user.surname, user.e_mail))
+                           (user.name, user.surname, e_mail))
         conn.commit()
         conn.close()
 
-    def get_user_name_and_surname(self, user: UserValidate):
+    def get_user_name_and_surname(self, e_mail, hash_password):
         conn = self.connect()
         with conn.cursor() as cursor:
             cursor.execute('SELECT name, surname FROM "user" WHERE e_mail = %s AND hash_password = %s',
-                           (user.e_mail, user.hash_password))
+                           (e_mail, hash_password))
             data = cursor.fetchone()
         conn.close()
         return data

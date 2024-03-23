@@ -1,5 +1,6 @@
 from repositories.users import UserRepository
 from schemas.users import User, UserValidate, UserUpdate
+from utils.jwt_worker import encode_data, decode_data
 
 
 class UserService:
@@ -9,21 +10,34 @@ class UserService:
 
     def create_user(self, user: User):
         self.repository.create_user(user)
+        return encode_data({"e_mail": user.e_mail, "hash_password": user.hash_password})
 
     def validate_user(self, user: UserValidate) -> bool:
-        return self.repository.validate_user(user)
+        if self.repository.validate_user(user):
+            return encode_data({"e_mail": user.e_mail, "hash_password": user.hash_password})
+        else:
+            return ''
 
     def validate_email(self, e_mail: str) -> bool:
         return self.repository.validate_email(e_mail)
 
-    def delete_user(self, e_mail: str):
-        self.repository.delete_user(e_mail)
+    def delete_user(self, token: str):
+        data = decode_data(token)
+        if 'e_mail' not in data or 'hash_password' not in data:
+            return False
+        self.repository.delete_user(data['e_mail'])
+        return True
 
-    def update_user(self, user: UserUpdate):
-        self.repository.update_user(user)
+    def update_user(self, user: UserUpdate, token: str):
+        data = decode_data(token)
+        if 'e_mail' not in data or 'hash_password' not in data:
+            return False
+        self.repository.update_user(user, data['e_mail'])
+        return True
 
-    def get_user(self, user: UserValidate):
-        data = self.repository.get_user_name_and_surname(user)
+    def get_user(self, token: str):
+        token = decode_data(token)
+        data = self.repository.get_user_name_and_surname(token['e_mail'], token['hash_password'])
         if data is None:
             return {}
         else:
