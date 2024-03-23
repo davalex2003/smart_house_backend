@@ -26,11 +26,11 @@ class RoomRepository:
             return
         return conn
 
-    def get_user_id(self, user: UserValidate):
+    def get_user_id(self, e_mail, hash_password):
         conn = self.connect()
         with conn.cursor() as cursor:
             cursor.execute('SELECT id FROM "user" WHERE e_mail = %s AND hash_password = %s',
-                           (user.e_mail, user.hash_password))
+                           (e_mail, hash_password))
             user_id = cursor.fetchone()
         conn.close()
         return user_id

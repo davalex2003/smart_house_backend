@@ -1,17 +1,19 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from starlette.responses import JSONResponse
 
 from depends import get_room_service
-from schemas.rooms import Room, RoomDTO, RoomID, RoomItem
+from schemas.rooms import Room, RoomID, RoomItem
 from services.rooms import RoomService
-from schemas.users import UserValidate
 
 router = APIRouter(prefix="/rooms", tags=["rooms"])
 
 
 @router.post("/create")
-async def create(room: Room, room_service: RoomService = Depends(get_room_service)):
-    result = room_service.create_room(room)
+async def create(room: Room, request: Request, room_service: RoomService = Depends(get_room_service)):
+    token = request.headers.get('Authorization', None)
+    if token is None:
+        return JSONResponse(status_code=401, content={"message": "Not found token"})
+    result = room_service.create_room(room, token)
     if result[0]:
         return JSONResponse(status_code=201, content={"message": "Created", "id": result[1]})
     else:
@@ -19,24 +21,38 @@ async def create(room: Room, room_service: RoomService = Depends(get_room_servic
 
 
 @router.get("/get_rooms")
-async def get_rooms(user: UserValidate, room_service: RoomService = Depends(get_room_service)):
-    return room_service.get_rooms(user)
+async def get_rooms(request: Request, room_service: RoomService = Depends(get_room_service)):
+    token = request.headers.get('Authorization', None)
+    if token is None:
+        return JSONResponse(status_code=401, content={"message": "Not found token"})
+    return room_service.get_rooms(token)
 
 
 @router.delete("/delete")
-async def delete(room: RoomID, room_service: RoomService = Depends(get_room_service)):
-    room_service.delete_room(room)
-    return JSONResponse(status_code=200, content={"message": "Deleted"})
+async def delete(request: Request, room: RoomID, room_service: RoomService = Depends(get_room_service)):
+    token = request.headers.get('Authorization', None)
+    if token is None:
+        return JSONResponse(status_code=401, content={"message": "Not found token"})
+    if room_service.delete_room(room, token):
+        return JSONResponse(status_code=200, content={"message": "Deleted"})
+    else:
+        return JSONResponse(status_code=404, content={"message": "Not found"})
 
 
 @router.put("/update")
-async def update(room: RoomItem, room_service: RoomService = Depends(get_room_service)):
-    if room_service.update_room(room):
+async def update(request: Request, room: RoomItem, room_service: RoomService = Depends(get_room_service)):
+    token = request.headers.get('Authorization', None)
+    if token is None:
+        return JSONResponse(status_code=401, content={"message": "Not found token"})
+    if room_service.update_room(room, token):
         return JSONResponse(status_code=200, content={"message": "Updated"})
     else:
         return JSONResponse(status_code=404, content={"message": "No room with that id"})
 
 
 @router.get("/get_devices")
-async def get_devices(room: RoomID, room_service: RoomService = Depends(get_room_service)):
-    return room_service.get_room_devices(room.id)
+async def get_devices(room_id: str, request: Request, room_service: RoomService = Depends(get_room_service)):
+    token = request.headers.get('Authorization', None)
+    if token is None:
+        return JSONResponse(status_code=401, content={"message": "Not found token"})
+    return room_service.get_room_devices(token, room_id)

@@ -2,8 +2,6 @@ from pydantic import BaseModel
 
 
 class Room(BaseModel):
-    e_mail: str
-    hash_password: str
     name: str
 
 

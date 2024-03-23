@@ -3,6 +3,7 @@ from typing import List
 from repositories.rooms import RoomRepository
 from schemas.rooms import RoomDTO, Room, RoomItem, RoomID
 from schemas.users import UserValidate
+from utils.jwt_worker import encode_data, decode_data
 
 
 class RoomService:
@@ -10,9 +11,11 @@ class RoomService:
     def __init__(self, repository: RoomRepository):
         self.repository = repository
 
-    def create_room(self, room: Room) -> tuple[bool, int]:
-        user = UserValidate(e_mail=room.e_mail, hash_password=room.hash_password)
-        user_id = self.repository.get_user_id(user)
+    def create_room(self, room: Room, token: str) -> tuple[bool, int]:
+        data = decode_data(token)
+        if 'e_mail' not in data or 'hash_password' not in data:
+            return False, 0
+        user_id = self.repository.get_user_id(data['e_mail'], data['hash_password'])
         if user_id is None:
             return False, 0
         user_id = user_id[0]
@@ -21,8 +24,11 @@ class RoomService:
         room_id = self.repository.get_last_id()
         return True, room_id
 
-    def get_rooms(self, user: UserValidate) -> List[RoomItem]:
-        user_id = self.repository.get_user_id(user)
+    def get_rooms(self, token: str) -> List[RoomItem]:
+        data = decode_data(token)
+        if 'e_mail' not in data or 'hash_password' not in data:
+            return []
+        user_id = self.repository.get_user_id(data['e_mail'], data['hash_password'])
         if user_id is None:
             return []
         user_id = user_id[0]
@@ -34,17 +40,27 @@ class RoomService:
             }
         return data
 
-    def delete_room(self, room: RoomID):
+    def delete_room(self, room: RoomID, token: str):
+        data = decode_data(token)
+        if 'e_mail' not in data or 'hash_password' not in data:
+            return False
         self.repository.delete_room(room.id)
+        return True
 
-    def update_room(self, room: RoomItem) -> bool:
+    def update_room(self, room: RoomItem, token: str) -> bool:
+        data = decode_data(token)
+        if 'e_mail' not in data or 'hash_password' not in data:
+            return False
         room_id = self.repository.get_room_id(room.id)
         if room_id is None:
             return False
         self.repository.update_room(room)
         return True
 
-    def get_room_devices(self, room_id: int):
+    def get_room_devices(self, token: str, room_id):
+        data = decode_data(token)
+        if 'e_mail' not in data or 'hash_password' not in data:
+            return []
         data = self.repository.get_room_devices(room_id)
         for i in range(len(data)):
             data[i] = {
@@ -57,4 +73,3 @@ class RoomService:
                 "alarm_lamp": data[i][9]
             }
         return data
-

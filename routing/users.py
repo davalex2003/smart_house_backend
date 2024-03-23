@@ -59,7 +59,7 @@ async def update(request: Request, user: UserUpdate, user_service: UserService =
         return JSONResponse(status_code=401, content={"message": "Wrong token"})
 
 
-@router.get("/user_info")
+@router.get("/info")
 async def user_info(request: Request, user_service: UserService = Depends(get_user_service)):
     token = request.headers.get('Authorization', None)
     if token is None:
