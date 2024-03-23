@@ -110,3 +110,10 @@ class DeviceRepository:
             cursor.execute('UPDATE "device" SET state = %s, alarm_time = %s WHERE id = %s', (state, time, device_id))
         conn.commit()
         conn.close()
+
+    def manage_security(self, device_id: int, state: bool):
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute('UPDATE "device" SET state = %s WHERE id = %s', (state, device_id))
+        conn.commit()
+        conn.close()

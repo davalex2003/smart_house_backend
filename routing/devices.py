@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from starlette.responses import JSONResponse
 
 from depends import get_device_service
-from schemas.devices import DeviceCreate, DeviceUpdate, Led, ClockLamp, ClockTime, Alarm
+from schemas.devices import DeviceCreate, DeviceUpdate, Led, ClockLamp, ClockTime, Alarm, Security
 from services.devices import DeviceService, DeviceDelete
 from schemas.users import UserValidate
 
@@ -73,6 +73,15 @@ async def manage_clock_time(device: ClockTime, device_service: DeviceService = D
 @router.put("/manage_alarm")
 async def manage_alarm(device: Alarm, device_service: DeviceService = Depends(get_device_service)):
     data = device_service.manage_alarm(device)
+    if data[0]:
+        return JSONResponse(status_code=200, content={"message": data[1]})
+    else:
+        return JSONResponse(status_code=404, content={"message": data[1]})
+
+
+@router.put("/manage_security")
+async def manage_security(device: Security, device_service: DeviceService = Depends(get_device_service)):
+    data = device_service.manage_security(device)
     if data[0]:
         return JSONResponse(status_code=200, content={"message": data[1]})
     else:

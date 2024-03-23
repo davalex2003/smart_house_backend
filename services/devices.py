@@ -1,5 +1,5 @@
 from repositories.devices import DeviceRepository
-from schemas.devices import DeviceCreate, DeviceDelete, DeviceUpdate, Led, ClockLamp, ClockTime, Alarm
+from schemas.devices import DeviceCreate, DeviceDelete, DeviceUpdate, Led, ClockLamp, ClockTime, Alarm, Security
 from schemas.users import UserValidate
 
 
@@ -89,4 +89,14 @@ class DeviceService:
         # if response != 200
         # return False, "Failed send data to device"
         self.repository.manage_alarm(alarm.id, alarm.state, alarm.time)
+        return True, "OK"
+
+    def manage_security(self, device: Security):
+        ip = self.repository.get_ip(device.id)
+        if ip is None:
+            return False, "Not found device"
+        # post to ip
+        # if response != 200
+        # return False, "Failed send data to device"
+        self.repository.manage_security(device.id, device.state)
         return True, "OK"

@@ -55,3 +55,8 @@ class Alarm(BaseModel):
     id: int
     state: bool
     time: str
+
+
+class Security(BaseModel):
+    id: int
+    state: bool
