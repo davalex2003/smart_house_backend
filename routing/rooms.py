@@ -20,7 +20,7 @@ async def create(room: Room, request: Request, room_service: RoomService = Depen
         return JSONResponse(status_code=401, content={"message": "Unauthorized"})
 
 
-@router.get("/get_rooms")
+@router.get("/list")
 async def get_rooms(request: Request, room_service: RoomService = Depends(get_room_service)):
     token = request.headers.get('Authorization', None)
     if token is None:
@@ -50,7 +50,7 @@ async def update(request: Request, room: RoomItem, room_service: RoomService = D
         return JSONResponse(status_code=404, content={"message": "No room with that id"})
 
 
-@router.get("/get_devices")
+@router.get("/devices")
 async def get_devices(room_id: int, request: Request, room_service: RoomService = Depends(get_room_service)):
     token = request.headers.get('Authorization', None)
     if token is None:
