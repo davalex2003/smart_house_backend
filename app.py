@@ -1,5 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, Request
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, FileResponse
 
 from routing.users import router as users_router
 from routing.rooms import router as rooms_router
@@ -25,34 +25,32 @@ async def root():
 
 
 @app.post("/security/raspberry")
-async def raspberry(file: UploadFile = File(...)):
+async def raspberry(ip: str, file: UploadFile = File(...)):
     with open(file.filename, "wb") as f:
         f.write(await file.read())
-    await notify_clients()
-    return JSONResponse(content={"message": "Photo uploaded successfully"})
+    await notify_clients(ip)
+    return JSONResponse(content={"message": "OK"}, status_code=201)
 
 
-async def notify_clients():
+async def notify_clients(ip: str):
     for client in connected_clients:
-        try:
-            await client.send_json({"message": "Alarm!"})
-        except Exception as e:
-            continue
+        if client['ip'] == ip:
+            try:
+                await client.send_json({"message": "Alarm!"})
+            except Exception:
+                continue
 
 
 @app.websocket("/security/client")
 async def websocket_endpoint(websocket):
     await websocket.accept()
-    connected_clients.append(websocket)
     try:
-        while True:
-            await websocket.receive_text()
+        message = await websocket.receive_text()
+        connected_clients.append({"websocket": websocket, "ip": message})
     except Exception:
         connected_clients.remove(websocket)
 
 
 @app.get("/security/photo")
-async def photo(request: Request):
-    token = request.headers.get('Authorization', None)
-    if token is None:
-        return JSONResponse(status_code=401, content={"message": "Not found token"})
+async def photo(ip: str):
+    return FileResponse(f'{ip}.jpg')
