@@ -39,10 +39,10 @@ class UserRepository:
                            (user.e_mail, user.hash_password))
             data = cursor.fetchall()
         conn.close()
-        if len(data) == 1:
-            return True
-        else:
+        if len(data) == 0:
             return False
+        else:
+            return True
 
     def validate_email(self, e_mail: str) -> bool:
         conn = self.connect()
