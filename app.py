@@ -25,11 +25,14 @@ async def root():
 
 
 @app.post("/security/raspberry")
-async def raspberry(ip: str, file: UploadFile = File(...)):
-    with open(file.filename, "wb") as f:
-        f.write(await file.read())
+async def raspberry(request: Request, image: UploadFile = File(...)):
+    contents = await image.read()
+    ip = request.client.host
+    with open(f"{ip}.png", "wb") as f:
+        f.write(contents)
+        f.close()
     await notify_clients(ip)
-    return JSONResponse(content={"message": "OK"}, status_code=201)
+    return JSONResponse(content={"message": "Image received"})
 
 
 async def notify_clients(ip: str):

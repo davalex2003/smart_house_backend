@@ -17,7 +17,7 @@ class DeviceService:
             return False, 0
         user_id = user_id[0]
         response = requests.get(f"http://{device.ip}/ping")
-        if response.status_code != 200:
+        if response.status_code != 200 and device.type != "security":
             return False, "Wrong IP address"
         self.repository.create_device(device, user_id)
         device_id = self.repository.get_last_id()
@@ -123,8 +123,5 @@ class DeviceService:
         ip = self.repository.get_ip(device.id)
         if ip is None:
             return False, "Not found device"
-        # post to ip
-        # if response != 200
-        # return False, "Failed send data to device"
         self.repository.manage_security(device.id, device.state)
         return True, "OK"
