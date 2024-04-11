@@ -16,8 +16,11 @@ class DeviceService:
         if user_id is None:
             return False, 0
         user_id = user_id[0]
-        response = requests.get(f"http://{device.ip}/ping")
-        if response.status_code != 200 and device.type != "security":
+        try:
+            response = requests.get(f"http://{device.ip}/ping")
+            if response.status_code != 200 and device.type != "security":
+                return False, "Wrong IP address"
+        except Exception:
             return False, "Wrong IP address"
         self.repository.create_device(device, user_id)
         device_id = self.repository.get_last_id()
@@ -71,8 +74,12 @@ class DeviceService:
         ip = self.repository.get_ip(led.id)
         if ip is None:
             return False, "Not found device"
-        response = requests.post(f"http://{ip}/manage", json={"state": led.state, "color": led.color})
-        if response.status_code != 200:
+        print(ip)
+        try:
+            response = requests.post(f"http://{ip}/manage", json={"state": led.state, "color": led.color})
+            if response.status_code != 200:
+                return False, "Something went wrong"
+        except Exception:
             return False, "Something went wrong"
         self.repository.manage_led(led)
         return True, "OK"
@@ -84,8 +91,11 @@ class DeviceService:
         ip = self.repository.get_ip(lamp.id)
         if ip is None:
             return False, "Not found device"
-        response = requests.post(f"http://{ip}/manage", json={"state": lamp.state})
-        if response.status_code != 200:
+        try:
+            response = requests.post(f"http://{ip}/manage", json={"state": lamp.state})
+            if response.status_code != 200:
+                return False, "Something went wrong"
+        except Exception:
             return False, "Something went wrong"
         self.repository.manage_clock_lamp(lamp.id, lamp.state)
         return True, "OK"
@@ -97,8 +107,11 @@ class DeviceService:
         ip = self.repository.get_ip(alarm.id)
         if ip is None:
             return False, "Not found device"
-        response = requests.post(f"http://{ip}/manage", json={"time": alarm.time})
-        if response.status_code != 200:
+        try:
+            response = requests.post(f"http://{ip}/manage", json={"time": alarm.time})
+            if response.status_code != 200:
+                return False, "Something went wrong"
+        except Exception:
             return False, "Something went wrong"
         self.repository.manage_clock_time(alarm.id, alarm.time)
         return True, "OK"
@@ -110,8 +123,11 @@ class DeviceService:
         ip = self.repository.get_ip(alarm.id)
         if ip is None:
             return False, "Not found device"
-        response = requests.post(f"http://{ip}/manage", json={"state": alarm.state, "time": alarm.time})
-        if response.status_code != 200:
+        try:
+            response = requests.post(f"http://{ip}/manage", json={"state": alarm.state, "time": alarm.time})
+            if response.status_code != 200:
+                return False, "Something went wrong"
+        except Exception:
             return False, "Something went wrong"
         self.repository.manage_alarm(alarm.id, alarm.state, alarm.time)
         return True, "OK"

@@ -80,6 +80,8 @@ class DeviceRepository:
             cursor.execute('SELECT ip FROM "device" WHERE id = %s', (device_id,))
             ip = cursor.fetchone()
         conn.close()
+        if ip is not None:
+            ip = ip[0]
         return ip
 
     def manage_led(self, led: Led):

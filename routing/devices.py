@@ -17,7 +17,7 @@ async def create(request: Request, device: DeviceCreate, device_service: DeviceS
     if result[0]:
         return JSONResponse(status_code=201, content={"message": "Created", "id": result[1]})
     else:
-        return JSONResponse(status_code=401, content={"message": result[1]})
+        return JSONResponse(status_code=400, content={"message": result[1]})
 
 
 @router.get("/get_all")
