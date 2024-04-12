@@ -45,7 +45,7 @@ class RoomRepository:
     def get_user_rooms(self, user_id: int):
         conn = self.connect()
         with conn.cursor() as cursor:
-            cursor.execute('SELECT id, name FROM "room" WHERE user_id = %s', (user_id,))
+            cursor.execute('SELECT id, name FROM "room" WHERE user_id = %s ORDER BY id', (user_id,))
             data = cursor.fetchall()
         conn.close()
         return data
@@ -83,7 +83,7 @@ class RoomRepository:
     def get_room_devices(self, room_id: int) -> List[DeviceItem]:
         conn = self.connect()
         with conn.cursor() as cursor:
-            cursor.execute('SELECT * FROM "device" WHERE room_id = %s', (room_id,))
+            cursor.execute('SELECT * FROM "device" WHERE room_id = %s ORDER BY id', (room_id,))
             data = cursor.fetchall()
         conn.close()
         return data

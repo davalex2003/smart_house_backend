@@ -53,7 +53,7 @@ class DeviceRepository:
         conn = self.connect()
         with conn.cursor() as cursor:
             cursor.execute(
-                'SELECT id, room_id, name, type, state, time, alarm_time, alarm_lamp FROM "device" WHERE user_id = %s',
+                'SELECT id, room_id, name, type, state, time, alarm_time, alarm_lamp FROM "device" WHERE user_id = %s ORDER BY id',
                 (user_id,))
             data = cursor.fetchall()
         conn.close()
