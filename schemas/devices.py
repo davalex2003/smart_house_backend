@@ -13,6 +13,7 @@ class DeviceItem(BaseModel):
     name: str
     type: str
     state: bool
+    ip: str
     time: Optional[str]
     alarm_time: Optional[str]
     alarm_lamp: bool

@@ -43,7 +43,8 @@ class DeviceService:
                 'state': data[i][4],
                 'time': data[i][5],
                 'alarm_time': data[i][6],
-                'alarm_lamp': data[i][7]
+                'alarm_lamp': data[i][7],
+                'ip': data[i][8]
             }
         return data
 

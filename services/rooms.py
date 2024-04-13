@@ -67,6 +67,7 @@ class RoomService:
                 "name": data[i][3],
                 "type": data[i][4],
                 "state": data[i][5],
+                "ip": data[i][6],
                 "time": data[i][7],
                 "alarm_time": data[i][8],
                 "alarm_lamp": data[i][9]
