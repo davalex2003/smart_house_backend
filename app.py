@@ -45,6 +45,7 @@ class ConnectionManager:
                 self.active_connections.append(i)
 
     async def broadcast(self, message: str, ip: str):
+        print(self.active_connections)
         for connection in self.active_connections:
             if ip == connection["ip"]:
                 await connection["ws"].send_text(message)
@@ -73,6 +74,11 @@ async def raspberry(request: Request, image: UploadFile = File(...)):
         f.write(contents)
         f.close()
     return JSONResponse(content={"message": "Image received"})
+
+
+@app.get("/trigger")
+async def trigger():
+    await manager.broadcast('1', '1')
 
 
 @app.websocket("/security/client")
