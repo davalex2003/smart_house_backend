@@ -16,12 +16,13 @@ class DeviceService:
         if user_id is None:
             return False, 0
         user_id = user_id[0]
-        try:
-            response = requests.get(f"http://{device.ip}/ping")
-            if response.status_code != 200 and device.type != "security":
-                return False, "Wrong IP address"
-        except Exception:
-            return False, "Wrong IP address"
+        # if device.type != "security" and device.type != "Камера":
+        #     try:
+        #         response = requests.get(f"http://{device.ip}/ping")
+        #         if response.status_code != 200 and device.type != "security":
+        #             return False, "Wrong IP address"
+        #     except Exception:
+        #         return False, "Wrong IP address"
         self.repository.create_device(device, user_id)
         device_id = self.repository.get_last_id()
         return True, device_id
