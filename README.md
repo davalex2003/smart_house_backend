@@ -7,7 +7,7 @@
 2. cd smart_house_backend
 3. docker compose up - для запуска docker-контейнера с БД
 4. pip install -r requirements.txt - установка python библиотек
-5. uvicorn app:app --host <ip> - запуск сервера
+5. uvicorn app:app --host <ip> --ssl-keyfile <key>.pem --ssl-certfile <cert>.pem - запуск сервера
 
 Тестирование:
 pytest
