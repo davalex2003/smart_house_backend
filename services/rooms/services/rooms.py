@@ -1,8 +1,8 @@
 from typing import List
 
-from repositories.rooms import RoomRepository
+from services.rooms.repositories.rooms import RoomRepository
 from schemas.rooms import RoomDTO, Room, RoomItem
-from utils.jwt_worker import decode_data
+from services.rooms.utils.jwt_worker import decode_data
 
 
 class RoomService:

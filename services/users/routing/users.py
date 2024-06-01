@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, Request
 from starlette.responses import JSONResponse
 
-from depends import get_user_service
+from services.users.depends import get_user_service
 from schemas.users import User, UserEmail, UserValidate, UserUpdate
-from services.users import UserService
-from utils.email_sender import send_verification_code
+from services.users.services.users import UserService
+from services.users.utils.email_sender import send_verification_code
 
 from random import randint
 
