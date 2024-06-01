@@ -1,6 +1,5 @@
 from services.devices.repositories.devices import DeviceRepository
 from schemas.devices import DeviceCreate, DeviceUpdate, Led, ClockLamp, ClockTime, Alarm, Security
-from services.devices.utils.jwt_worker import decode_data
 import requests
 
 
