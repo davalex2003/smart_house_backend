@@ -1,6 +1,6 @@
-from repositories.users import UserRepository
+from services.users.repositories.users import UserRepository
 from schemas.users import User, UserValidate, UserUpdate
-from utils.jwt_worker import encode_data, decode_data
+from services.devices.utils.jwt_worker import encode_data, decode_data
 
 
 class UserService:

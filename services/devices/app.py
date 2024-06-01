@@ -3,9 +3,7 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse, FileResponse
 from starlette.websockets import WebSocketDisconnect
 
-from routing.users import router as users_router
-from routing.rooms import router as rooms_router
-from routing.devices import router as devices_router
+from services.devices.routing.devices import router as devices_router
 
 app = FastAPI()
 
@@ -19,8 +17,6 @@ app.add_middleware(
 
 connected_clients = []
 
-app.include_router(users_router)
-app.include_router(rooms_router)
 app.include_router(devices_router)
 
 
@@ -62,7 +58,7 @@ async def ping():
 
 @app.get("/")
 async def root():
-    return "Бэкенд для курсового проекта. Для документации вызовите /docs"
+    return "Микросервис для устройств курсового проекта. Для документации вызовите /docs"
 
 
 @app.post("/security/raspberry")

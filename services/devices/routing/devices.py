@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, Request
 from starlette.responses import JSONResponse
 
-from depends import get_device_service
+from services.devices.depends import get_device_service
 from schemas.devices import DeviceCreate, DeviceUpdate, Led, ClockLamp, ClockTime, Alarm, Security
-from services.devices import DeviceService
+from services.devices.services.devices import DeviceService
 
 router = APIRouter(prefix="/devices", tags=["devices"])
 

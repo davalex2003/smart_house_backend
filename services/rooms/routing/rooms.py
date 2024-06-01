@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, Request
 from starlette.responses import JSONResponse
 
-from depends import get_room_service
+from services.rooms.depends import get_room_service
 from schemas.rooms import Room, RoomItem
-from services.rooms import RoomService
+from services.rooms.services.rooms import RoomService
 
 router = APIRouter(prefix="/rooms", tags=["rooms"])
 
